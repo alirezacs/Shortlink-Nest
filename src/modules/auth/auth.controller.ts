@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { loginDto } from './dto/login-dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -10,6 +11,7 @@ export class AuthController {
     ){}
 
     @Post('register')
+    @Public()
     async register(@Body() registerDto: RegisterDto){
         if (!registerDto) {
             throw new BadRequestException('Request body is required');
@@ -19,6 +21,7 @@ export class AuthController {
     }
 
     @Post('login')
+    @Public()
     async login(@Body() loginDto: loginDto){
         if (!loginDto) {
             throw new BadRequestException('Request body is required');
