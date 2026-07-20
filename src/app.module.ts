@@ -5,6 +5,7 @@ import { UserModule } from './modules/user/user.module';
 import { RoleModule } from './modules/role/role.module';
 import { PermissionModule } from './modules/permission/permission.module';
 import { appConfig, databaseConfig } from './config';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -33,6 +34,8 @@ import { appConfig, databaseConfig } from './config';
     RoleModule,
 
     PermissionModule,
+
+    AuthModule,
   ],
 })
 export class AppModule {}
