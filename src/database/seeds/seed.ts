@@ -3,6 +3,7 @@ import AppDataSource from '../data-source';
 import { Permission } from '../../modules/permission/entities/permission.entity';
 import { Role } from '../../modules/role/entities/role.entity';
 import { User } from '../../modules/user/entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 async function seed() {
   await AppDataSource.initialize();
@@ -58,11 +59,12 @@ async function seed() {
   });
 
   if (!adminUser) {
+    const hashedPassword = await bcrypt.hash('Alireza@1383', 10)
     adminUser = userRepository.create({
       firstName: 'Admin',
       lastName: 'User',
       email: 'admin@example.com',
-      password: 'replace-with-a-hashed-password',
+      password: hashedPassword,
       emailVerifiedAt: new Date(),
       roles: [adminRole],
     });
