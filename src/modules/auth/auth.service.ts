@@ -5,6 +5,7 @@ import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login-dto';
 import { User } from '../user/entities/user.entity';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,10 +21,19 @@ export class AuthService {
 
         const hashedPassword = await bcrypt.hash(registerDto.password, 10);
 
-        return await this.userSerivice.create({
+        const user = await this.userSerivice.create({
             ...registerDto,
             password: hashedPassword
         })
+
+        const response: UserResponseDto = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+        }
+
+        return response;
     }
 
     async validateUser(email: string, password: string): Promise<User>{
