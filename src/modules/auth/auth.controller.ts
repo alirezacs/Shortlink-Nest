@@ -6,6 +6,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { Permissions } from 'src/common/decorators/permissions.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -34,7 +35,7 @@ export class AuthController {
     }
 
     @Get('me')
-    @Roles('admin')
+    @Permissions('users.read')
     async getProfile(@CurrentUser() user: User){
         return user;
     }
