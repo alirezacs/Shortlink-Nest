@@ -22,15 +22,15 @@ Make sure the following software is installed:
 Backend
 
 ```bash
-git clone <backend-repository-url>
-cd backend
+git clone https://github.com/alirezacs/Shortlink-Nest
+cd Shortlink-Nest
 ```
 
 Frontend
 
 ```bash
-git clone <frontend-repository-url>
-cd frontend
+git clone https://github.com/alirezacs/Shortlink-Next
+cd Shortlink-Next
 ```
 
 ---
@@ -125,7 +125,7 @@ npm run start:dev
 Backend URL:
 
 ```
-http://localhost:3001
+http://localhost:3002
 ```
 
 ---
@@ -155,10 +155,8 @@ admin@example.com
 Password
 
 ```
-********
+Alireza@1383
 ```
-
-> Replace these credentials with your actual seeded administrator account.
 
 ---
 
