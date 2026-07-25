@@ -16,3 +16,11 @@ export const API_PREFIX = 'api';
  * contract already published to clients.
  */
 export const API_VERSION_1 = '1';
+
+/**
+ * Mount point of the Swagger UI: `/api/docs`.
+ *
+ * Swagger is registered straight on the HTTP adapter rather than through the
+ * router, so the global prefix is not applied for us and has to be spelled out.
+ */
+export const API_DOCS_PATH = `${API_PREFIX}/docs`;

@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
@@ -13,6 +14,14 @@ export const normalizeDescription = ({ value }: { value: unknown }) =>
     typeof value === 'string' ? (value.trim() || null) : value;
 
 export class CreatePermissionDto {
+    @ApiProperty({
+        description:
+            'Unique, dot separated identifier. Trimmed and lower cased before validation. The first segment becomes the permission group.',
+        minLength: 3,
+        maxLength: 100,
+        pattern: PERMISSION_NAME_PATTERN.source,
+        example: 'users.read',
+    })
     @Transform(normalizePermissionName)
     @IsString()
     @MinLength(3)
@@ -22,6 +31,13 @@ export class CreatePermissionDto {
     })
     name: string;
 
+    @ApiPropertyOptional({
+        description:
+            'Free text explanation. A blank string is stored as null, meaning "no description".',
+        maxLength: 255,
+        nullable: true,
+        example: 'Read the user directory',
+    })
     @Transform(normalizeDescription)
     @IsOptional()
     @IsString()
