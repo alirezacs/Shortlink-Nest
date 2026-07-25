@@ -3,9 +3,9 @@ import { Transform } from "class-transformer";
 import { IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
 import {
     normalizeDescription,
-    normalizePermissionName,
-    PERMISSION_NAME_PATTERN,
-} from "./create-permission.dto";
+    normalizeIdentifier,
+} from "../../../common/dto/transformers";
+import { PERMISSION_NAME_PATTERN } from "./create-permission.dto";
 
 // Every field is optional: an omitted field keeps its stored value, while
 // `description: null` (or an empty string) clears the stored description.
@@ -17,7 +17,7 @@ export class UpdatePermissionDto {
         pattern: PERMISSION_NAME_PATTERN.source,
         example: 'users.read',
     })
-    @Transform(normalizePermissionName)
+    @Transform(normalizeIdentifier)
     @IsOptional()
     @IsString()
     @MinLength(3)

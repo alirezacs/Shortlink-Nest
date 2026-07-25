@@ -13,11 +13,14 @@ export class Role{
     })
     name: string;
 
+    // `type` is spelled out because the union below hides the column type from
+    // TypeORM's reflection. The stored column is unchanged: varchar(255) NULL.
     @Column({
+        type: 'varchar',
         nullable: true,
         length: 255
     })
-    description?: string;
+    description?: string | null;
 
     @Column({
         name: 'is_active',

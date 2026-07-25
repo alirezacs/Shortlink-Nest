@@ -2,17 +2,15 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsBoolean, IsIn, IsOptional, IsString, MaxLength } from "class-validator";
 import { PaginationQueryDto } from "../../../common/dto/pagination-query.dto";
+import {
+    normalizeIdentifier,
+    toOptionalBoolean,
+    trimValue,
+} from "../../../common/dto/transformers";
 
 export const PERMISSION_SORT_FIELDS = ['name', 'createdAt', 'updatedAt'] as const;
 
 export type PermissionSortField = (typeof PERMISSION_SORT_FIELDS)[number];
-
-const toOptionalBoolean = ({ value }: { value: unknown }) => {
-    if (value === 'true' || value === '1' || value === true) return true;
-    if (value === 'false' || value === '0' || value === false) return false;
-
-    return value;
-};
 
 export class QueryPermissionDto extends PaginationQueryDto {
     // Free text search across name and description.
@@ -21,7 +19,7 @@ export class QueryPermissionDto extends PaginationQueryDto {
         maxLength: 100,
         example: 'users',
     })
-    @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+    @Transform(trimValue)
     @IsOptional()
     @IsString()
     @MaxLength(100)
@@ -34,7 +32,7 @@ export class QueryPermissionDto extends PaginationQueryDto {
         maxLength: 100,
         example: 'users',
     })
-    @Transform(({ value }) => typeof value === 'string' ? value.trim().toLowerCase() : value)
+    @Transform(normalizeIdentifier)
     @IsOptional()
     @IsString()
     @MaxLength(100)
