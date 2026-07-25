@@ -1,9 +1,22 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { API_PREFIX, API_VERSION_1 } from './common/constants/api.constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Routes resolve as /<prefix>/v<version>/<controller path>, e.g. /api/v1/auth/login.
+  app.setGlobalPrefix(API_PREFIX);
+
+  // Controllers already pin their own version. `defaultVersion` only covers
+  // controllers added later that forget to, so an unversioned route can never
+  // leak outside /api/v1.
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: API_VERSION_1,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

@@ -79,7 +79,8 @@ Create a `.env.local` file.
 Example:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:3001
+# Origin only. The /api/v1 prefix is added in src/lib/api/endpoints.ts.
+BACKEND_API_URL=http://localhost:3002
 ```
 
 ---
@@ -163,6 +164,23 @@ Alireza@1383
 
 ---
 
+# API Versioning
+
+The API uses the built in NestJS URI versioning (`VersioningType.URI`) behind the
+global prefix `api`, so every route is served under:
+
+```
+/api/v<version>/<resource>
+```
+
+Only version 1 exists today. Each controller pins its version explicitly, and
+`defaultVersion` in `src/main.ts` catches any controller added later that forgets
+to. The prefix and version live in `src/common/constants/api.constants.ts`.
+
+Unversioned paths such as `/auth/login` no longer resolve and answer 404.
+
+---
+
 # Permissions Module
 
 Every endpoint requires a signed in account whose roles grant the listed
@@ -172,12 +190,15 @@ permission.
 
 | Method | Endpoint | Permission | Notes |
 | ------ | -------- | ---------- | ----- |
-| GET | `/permissions` | `permissions.read` | Paginated list. Query: `page`, `limit` (max 100), `search`, `group`, `assigned` (`true`/`false`), `sortBy` (`name`, `createdAt`, `updatedAt`), `sortOrder` (`ASC`/`DESC`) |
-| GET | `/permissions/groups` | `permissions.read` | Distinct name prefixes, powers the group filter |
-| GET | `/permissions/:id` | `permissions.read` | Single permission including the roles that use it |
-| POST | `/permissions` | `permissions.create` | Body: `name`, optional `description` |
-| PATCH | `/permissions/:id` | `permissions.update` | Partial update, `description: null` clears it |
-| DELETE | `/permissions/:id` | `permissions.delete` | Answers 204, or 409 while roles still use the permission |
+| POST | `/api/v1/auth/register` | public | Body: `firstName`, `lastName`, `email`, `password` |
+| POST | `/api/v1/auth/login` | public | Body: `email`, `password`. Returns `accessToken` |
+| GET | `/api/v1/auth/me` | `users.read` | Signed in account |
+| GET | `/api/v1/permissions` | `permissions.read` | Paginated list. Query: `page`, `limit` (max 100), `search`, `group`, `assigned` (`true`/`false`), `sortBy` (`name`, `createdAt`, `updatedAt`), `sortOrder` (`ASC`/`DESC`) |
+| GET | `/api/v1/permissions/groups` | `permissions.read` | Distinct name prefixes, powers the group filter |
+| GET | `/api/v1/permissions/:id` | `permissions.read` | Single permission including the roles that use it |
+| POST | `/api/v1/permissions` | `permissions.create` | Body: `name`, optional `description` |
+| PATCH | `/api/v1/permissions/:id` | `permissions.update` | Partial update, `description: null` clears it |
+| DELETE | `/api/v1/permissions/:id` | `permissions.delete` | Answers 204, or 409 while roles still use the permission |
 
 Names are stored lower case and dot separated, for example `users.read`. The
 first segment is the group the dashboard filters and badges by.
@@ -190,8 +211,11 @@ first segment is the group the dashboard filters and badges by.
 | Create | `/permissions/create` |
 | Edit | `/permissions/<id>/edit` |
 
-The browser never calls NestJS directly. The `/api/permissions/*` route
-handlers forward the HttpOnly access token from the Next.js server.
+The browser never calls NestJS directly. The `/api/permissions/*` route handlers
+are Next.js BFF routes: they forward the HttpOnly access token from the Next.js
+server to the versioned NestJS routes (`/api/v1/permissions/*`). Those two path
+spaces are deliberately independent, the dashboard's own routes are not a public
+API and are not versioned.
 
 ---
 

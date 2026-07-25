@@ -16,8 +16,9 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { QueryPermissionDto } from './dto/query-permission.dto';
 import { Permissions } from '../../common/decorators/permissions.decorator';
+import { API_VERSION_1 } from '../../common/constants/api.constants';
 
-@Controller('permissions')
+@Controller({ path: 'permissions', version: API_VERSION_1 })
 export class PermissionController {
     constructor(
         private readonly permissionService: PermissionService

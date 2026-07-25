@@ -7,8 +7,9 @@ import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Permissions } from 'src/common/decorators/permissions.decorator';
+import { API_VERSION_1 } from 'src/common/constants/api.constants';
 
-@Controller('auth')
+@Controller({ path: 'auth', version: API_VERSION_1 })
 export class AuthController {
     constructor(
         private readonly authService: AuthService
