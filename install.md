@@ -111,8 +111,11 @@ npm run seed
 This will create:
 
 - Default roles
-- Default permissions
+- Default permissions (`users.*`, `roles.*`, `permissions.*`)
 - Administrator account
+
+The seeder is idempotent. Re-run it after pulling changes that add new
+permissions, otherwise existing accounts cannot reach the matching endpoints.
 
 ---
 
@@ -157,6 +160,38 @@ Password
 ```
 Alireza@1383
 ```
+
+---
+
+# Permissions Module
+
+Every endpoint requires a signed in account whose roles grant the listed
+permission.
+
+## API (http://localhost:3002)
+
+| Method | Endpoint | Permission | Notes |
+| ------ | -------- | ---------- | ----- |
+| GET | `/permissions` | `permissions.read` | Paginated list. Query: `page`, `limit` (max 100), `search`, `group`, `assigned` (`true`/`false`), `sortBy` (`name`, `createdAt`, `updatedAt`), `sortOrder` (`ASC`/`DESC`) |
+| GET | `/permissions/groups` | `permissions.read` | Distinct name prefixes, powers the group filter |
+| GET | `/permissions/:id` | `permissions.read` | Single permission including the roles that use it |
+| POST | `/permissions` | `permissions.create` | Body: `name`, optional `description` |
+| PATCH | `/permissions/:id` | `permissions.update` | Partial update, `description: null` clears it |
+| DELETE | `/permissions/:id` | `permissions.delete` | Answers 204, or 409 while roles still use the permission |
+
+Names are stored lower case and dot separated, for example `users.read`. The
+first segment is the group the dashboard filters and badges by.
+
+## Dashboard (http://localhost:3000)
+
+| Page | Path |
+| ---- | ---- |
+| List with search, filters, sorting and pagination | `/permissions` |
+| Create | `/permissions/create` |
+| Edit | `/permissions/<id>/edit` |
+
+The browser never calls NestJS directly. The `/api/permissions/*` route
+handlers forward the HttpOnly access token from the Next.js server.
 
 ---
 

@@ -13,10 +13,11 @@ export class Permission{
     name: string;
 
     @Column({
+        type: 'varchar',
         nullable: true,
         length: 255
     })
-    description?: string;
+    description?: string | null;
 
     @CreateDateColumn({
         name: 'created_at'
