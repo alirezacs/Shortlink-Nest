@@ -37,12 +37,14 @@ export class User {
     })
     isActive: boolean;
 
+    // Nullable on purpose: clearing the column is how an address is marked
+    // unverified again, so the union has to admit null and not only undefined.
     @Column({
         name: 'email_verified_at',
         type: 'timestamp',
         nullable: true
     })
-    emailVerifiedAt?: Date;
+    emailVerifiedAt?: Date | null;
 
     @Column({
         name: 'last_login_at',

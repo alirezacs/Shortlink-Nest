@@ -1,11 +1,11 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login-dto';
 import { User } from '../user/entities/user.entity';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserIdentityDto } from './dto/user-identity.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,19 +14,13 @@ export class AuthService {
         private readonly jwtService: JwtService
     ){}
 
-    async register(registerDto: RegisterDto){
-        const existingUser = await this.userSerivice.findByEmail(registerDto.email);
+    async register(registerDto: RegisterDto): Promise<UserIdentityDto>{
+        // Accounts are created in one place only. The user service owns the
+        // uniqueness check, the hashing and the role assignment, so an account
+        // registered here is built exactly like one created from the dashboard.
+        const user = await this.userSerivice.create(registerDto);
 
-        if(existingUser) throw new ConflictException('Email Already Exists');
-
-        const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-
-        const user = await this.userSerivice.create({
-            ...registerDto,
-            password: hashedPassword
-        })
-
-        const response: UserResponseDto = {
+        const response: UserIdentityDto = {
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,

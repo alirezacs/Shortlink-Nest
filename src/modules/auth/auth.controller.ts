@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { loginDto } from './dto/login-dto';
 import { LoginResponseDto } from './dto/login-response.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserIdentityDto } from './dto/user-identity.dto';
 import { ProfileResponseDto } from './dto/profile-response.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
@@ -41,7 +41,7 @@ export class AuthController {
     })
     @ApiCreatedResponse({
         description: 'The account was created.',
-        type: UserResponseDto,
+        type: UserIdentityDto,
     })
     @ApiBadRequestResponse({
         description: 'The payload failed validation.',

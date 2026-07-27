@@ -13,6 +13,13 @@ export const trimValue = ({ value }: { value: unknown }) =>
 export const normalizeIdentifier = ({ value }: { value: unknown }) =>
     typeof value === 'string' ? value.trim().toLowerCase() : value;
 
+/**
+ * Addresses are stored lower cased, so `Ada@Example.com` and `ada@example.com`
+ * cannot become two accounts competing for the same login.
+ */
+export const normalizeEmail = ({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value;
+
 /** An empty description means "no description", not an empty string. */
 export const normalizeDescription = ({ value }: { value: unknown }) =>
     typeof value === 'string' ? (value.trim() || null) : value;

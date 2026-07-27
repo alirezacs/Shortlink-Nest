@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UserResponseDto } from "./user-response.dto";
+import { UserIdentityDto } from "./user-identity.dto";
 
 export class ProfilePermissionDto {
     @ApiProperty({ format: 'uuid' })
@@ -38,10 +38,10 @@ export class ProfileRoleDto {
 /**
  * Body of `GET /api/v1/auth/me`.
  *
- * Extends `UserResponseDto` so the identity fields are described in one place,
+ * Extends `UserIdentityDto` so the identity fields are described in one place,
  * and adds the account state plus the RBAC graph loaded by the JWT strategy.
  */
-export class ProfileResponseDto extends UserResponseDto {
+export class ProfileResponseDto extends UserIdentityDto {
     @ApiProperty({
         description: 'Deactivated accounts keep their rows but cannot be used.',
         example: true,
