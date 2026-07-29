@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { PermissionGuard } from './common/guards/permissions.guard';
+import { SettingsModule } from './modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -40,6 +41,8 @@ import { PermissionGuard } from './common/guards/permissions.guard';
     PermissionModule,
 
     AuthModule,
+
+    SettingsModule,
   ],
   providers: [
     {

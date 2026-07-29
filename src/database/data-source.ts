@@ -3,6 +3,8 @@ import { DataSource } from 'typeorm';
 import { Permission } from '../modules/permission/entities/permission.entity';
 import { Role } from '../modules/role/entities/role.entity';
 import { User } from '../modules/user/entities/user.entity';
+import { Setting } from 'src/modules/settings/entities/setting.entity';
+import { SettingCategory } from 'src/modules/settings/entities/setting-category.entity';
 
 const AppDataSource = new DataSource({
   type: 'postgres',
@@ -14,7 +16,7 @@ const AppDataSource = new DataSource({
 
   // The migration CLI loads this TypeScript file, so use class references rather
   // than a filesystem glob. This cannot scan dist, node_modules, or a parent path.
-  entities: [User, Role, Permission],
+  entities: [User, Role, Permission, Setting, SettingCategory],
   migrations: ['src/database/migrations/*.ts'],
 
   synchronize: false,
