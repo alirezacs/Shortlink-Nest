@@ -11,6 +11,9 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { PermissionGuard } from './common/guards/permissions.guard';
 import { SettingsModule } from './modules/settings/settings.module';
+import { LinkModule } from './modules/link/link.module';
+import { LinkService } from './modules/link/link.service';
+import { LinkController } from './modules/link/link.controller';
 
 @Module({
   imports: [
@@ -43,6 +46,8 @@ import { SettingsModule } from './modules/settings/settings.module';
     AuthModule,
 
     SettingsModule,
+
+    LinkModule,
   ],
   providers: [
     {
@@ -56,7 +61,9 @@ import { SettingsModule } from './modules/settings/settings.module';
     {
       provide: APP_GUARD,
       useClass: PermissionGuard
-    }
-  ]
+    },
+    LinkService
+  ],
+  controllers: [LinkController]
 })
 export class AppModule {}
