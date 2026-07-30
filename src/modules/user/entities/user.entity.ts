@@ -1,5 +1,7 @@
 import { Role } from '../../role/entities/role.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Link } from '../../link/entities/link.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import type { Relation } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -81,4 +83,10 @@ export class User {
         }
     })
     roles: Role[];
+
+    @OneToMany(
+        () => Link,
+        (link) => link.user,
+    )
+    links: Relation<Link[]>;
 }
