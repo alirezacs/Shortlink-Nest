@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
     ApiBearerAuth,
@@ -78,6 +78,7 @@ export class AuthController {
         description: 'Unknown email address or wrong password.',
         type: ErrorResponseDto,
     })
+    @HttpCode(200)
     async login(@Body() loginDto: loginDto){
         if (!loginDto) {
             throw new BadRequestException('Request body is required');
