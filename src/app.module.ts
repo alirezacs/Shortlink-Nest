@@ -70,8 +70,7 @@ import { LoggerModule } from './common/logger';
       useClass: PermissionGuard
     },
     LinkService
-  ],
-  controllers: [LinkController]
+  ]
 })
 export class AppModule {
   configure(

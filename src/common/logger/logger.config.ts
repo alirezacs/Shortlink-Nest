@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
 const logsDirectory = path.join(process.cwd(), 'logs');
 
@@ -39,20 +40,36 @@ export const winstonConfig: winston.LoggerOptions = {
   transports: [
     new winston.transports.Console(),
 
-    new winston.transports.File({
-      filename: path.join(
-        logsDirectory,
-        'application.log',
-      ),
+    new DailyRotateFile({
       level: 'info',
+
+      dirname: logsDirectory,
+
+      filename: 'application-%DATE%.log',
+
+      datePattern: 'YYYY-MM-DD',
+
+      zippedArchive: true,
+
+      maxSize: '20m',
+
+      maxFiles: '30d',
     }),
 
-    new winston.transports.File({
-      filename: path.join(
-        logsDirectory,
-        'error.log',
-      ),
+    new DailyRotateFile({
       level: 'error',
+
+      dirname: logsDirectory,
+
+      filename: 'error-%DATE%.log',
+
+      datePattern: 'YYYY-MM-DD',
+
+      zippedArchive: true,
+
+      maxSize: '20m',
+
+      maxFiles: '90d',
     }),
   ],
 };
