@@ -1,49 +1,78 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { WINSTON_MODULE_PROVIDER } from "nest-winston";
-import { Logger } from "winston";
+import {
+  Inject,
+  Injectable,
+  LoggerService as NestLoggerService,
+} from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+
+import { LogEntry } from './interfaces/log-entry.interface';
 
 @Injectable()
-export class LoggerService {
+export class LoggerService implements NestLoggerService {
   constructor(
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly logger: Logger,
   ) {}
 
-  log(message: string, meta?: unknown): void {
-    this.logger.info(message, meta);
-  }
-
-  error(
-    message: string,
-    trace?: unknown,
-    meta?: unknown,
-  ): void {
-    this.logger.error(message, {
-      trace,
-      ...((meta as object) || {}),
+  log(message: unknown, context?: string): void {
+    this.logger.info(String(message), {
+      context,
     });
   }
 
-  warn(message: string, meta?: unknown): void {
-    this.logger.warn(message, meta);
-  }
-
-  debug(message: string, meta?: unknown): void {
-    this.logger.debug(message, meta);
-  }
-
-  verbose(message: string, meta?: unknown): void {
-    this.logger.verbose(message, meta);
-  }
-
-  logWithContext(
-    context: string,
-    message: string,
-    meta?: unknown
-  ): void{
-    this.logger.info(message, {
+  error(
+    message: unknown,
+    trace?: string,
+    context?: string,
+  ): void {
+    this.logger.error(String(message), {
       context,
-      ...((meta as object) || {}),
-    })
+      trace,
+    });
+  }
+
+  warn(message: unknown, context?: string): void {
+    this.logger.warn(String(message), {
+      context,
+    });
+  }
+
+  debug(message: unknown, context?: string): void {
+    this.logger.debug(String(message), {
+      context,
+    });
+  }
+
+  verbose(message: unknown, context?: string): void {
+    this.logger.verbose(String(message), {
+      context,
+    });
+  }
+
+  http(entry: LogEntry): void {
+    this.logger.info(entry.message, {
+      context: entry.context,
+
+      method: entry.method,
+
+      url: entry.url,
+
+      statusCode: entry.statusCode,
+
+      duration: entry.duration,
+
+      ip: entry.ip,
+
+      userAgent: entry.userAgent,
+
+      requestId: entry.requestId,
+
+      userId: entry.userId,
+
+      userEmail: entry.userEmail,
+
+      meta: entry.meta,
+    });
   }
 }

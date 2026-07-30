@@ -1,5 +1,9 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';import { TypeOrmModule } from '@nestjs/typeorm';
+import { LoggingMiddleware } from './common/middleware/logging.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
 import { RoleModule } from './modules/role/role.module';
@@ -69,4 +73,12 @@ import { LoggerModule } from './common/logger';
   ],
   controllers: [LinkController]
 })
-export class AppModule {}
+export class AppModule {
+  configure(
+    consumer: MiddlewareConsumer,
+  ): void {
+    consumer
+      .apply(LoggingMiddleware)
+      .forRoutes('*');
+  }
+}
