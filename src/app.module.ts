@@ -14,9 +14,12 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { LinkModule } from './modules/link/link.module';
 import { LinkService } from './modules/link/link.service';
 import { LinkController } from './modules/link/link.controller';
+import { LoggerModule } from './common/logger';
 
 @Module({
   imports: [
+    LoggerModule,
+
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, databaseConfig]

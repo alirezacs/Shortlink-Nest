@@ -9,6 +9,7 @@ import { SettingResponseDto } from './dto/setting/setting-response.dto';
 import { SettingValueValidator } from './validators/setting-value.validator';
 import { SettingMapper } from './mappers/setting.mapper';
 import { UpdateSettingDto } from './dto/setting/update-setting.dto';
+import { LoggerService } from 'src/common/logger';
 
 @Injectable()
 export class SettingsService {
@@ -17,7 +18,9 @@ export class SettingsService {
         private readonly settingRepository: Repository<Setting>,
 
         @InjectRepository(SettingCategory)
-        private readonly categoryRepository: Repository<SettingCategory>
+        private readonly categoryRepository: Repository<SettingCategory>,
+
+        private readonly logger: LoggerService
     ){}
 
     private validateSettingValue(
@@ -154,6 +157,9 @@ export class SettingsService {
     }
 
     async findAll(): Promise<SettingResponseDto[]> {
+        this.logger.log(
+            'Logger test',
+        );
         const settings = await this.settingRepository.find({
             relations: {
             category: true,
